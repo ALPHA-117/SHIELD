@@ -50,49 +50,18 @@ graph TD
 The technical stack and data flow between components, optimized for AMD hardware.
 
 ```mermaid
-graph TB
-    subgraph "External Data Layer"
-        GEE[Google Earth Engine]
-        OM[Open-Meteo API]
-        USDA[USDA Soil Database]
-    end
-
-    subgraph "SHIELD Core (AMD Accelerated)"
-        subgraph "Ingestion & Processing"
-            P1[Data Ingestor]
-            P2[Feature Engineering]
-            P3[Physics-Based Thresholding]
-        end
-
-        subgraph "Models (ROCm)"
-            M1[LSTM: Temporal patterns]
-            M2[XGBoost: Spatial features]
-            M3[Hybrid Fusion Layer]
-        end
-    end
-
-    subgraph "Output & Operations"
-        O1[Daily Alert Generator]
-        O2[Operational CSV Reports]
-        O3[Model Drift Monitor]
-    end
-
-    GEE --> P1
-    OM --> P1
-    USDA --> P3
-    
-    P1 --> P2
-    P3 --> P2
-    
-    P2 --> M1
-    P2 --> M2
-    M1 --> M3
-    M2 --> M3
-    
-    M3 --> O1
-    O1 --> O2
-    O2 --> O3
-    O3 -->|Retraining Trigger| M1
+graph TD
+    A[Google Earth Engine] -->|GPM Rainfall & SRTM Elevation| B(Data Preprocessing)
+    C[Open-Meteo API] -->|GFS & ICON Forecasts| B
+    B --> D{Hybrid Model}
+    D -->|Time-Series Patterns| E[LSTM Layer]
+    D -->|Spatial Features| F[XGBoost Layer]
+    E --> G[Flood Probability]
+    F --> G
+    G --> H[Three-Tier Alert System]
+    H -->|🔴 🟡 🔵| I[Operational Reports]
+    I --> J[Feedback Loop vs GEE Ground Truth]
+    J -->|Retraining Trigger| D
 ```
 
 ---
