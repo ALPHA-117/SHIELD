@@ -1,8 +1,9 @@
-# SHIELD: Smart Hydro-climate Insights for Early warning & Local Defense
+# SHIELD: Scalable Hydrological Intelligence for Early flood-risk and Lead-time Detection
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Machine Learning](https://img.shields.io/badge/ML-XGBoost%20%2B%20LSTM-orange.svg)]()
+[![Hack2Skill](https://img.shields.io/badge/Hackathon-Hack2Skill%20x%20AMD-red.svg)]()
 
 **SHIELD** is an advanced AI-powered flood prediction and early warning system designed to bridge the gap between global climate data and local disaster preparedness. By combining high-resolution satellite imagery, real-time weather forecasts, and physics-informed environmental features, SHIELD provides actionable flood risk assessments up to **15 days in advance**.
 
@@ -33,7 +34,9 @@ SHIELD is rigorously evaluated using a rolling 15-day simulation (simulating a d
 | **7-Day** | 50.0% | 39.1% | **0.439** | 🟡 Watch |
 | **10-Day** | 42.9% | 23.1% | **0.300** | 🔵 Outlook |
 
-*Note: The system identifies a "Perfect Weather Ceiling" F1 of **0.704**, indicating high potential when forecasts are accurate.*
+> [!NOTE]  
+> **Contextual Improvement**: Baseline F1 before improvements was **0.267 (1-day only)**. 5-day and 7-day lead times had **zero detection capability** at baseline.
+> The **Perfect Weather Ceiling** of F1 **0.704** confirms the architecture's true potential — current scores are bottlenecked primarily by weather forecast quality, not model capability.
 
 ---
 
@@ -68,25 +71,25 @@ graph TD
 
 ## 📅 Implementation Roadmap
 
-### Phase 1: Foundation
-- Multi-region data gathering using GEE.
-- Initial XGBoost implementation for spatial classification.
+### Phase 1: Threshold Calibration
+- Bracket-level analysis (1–2, 3–4, 5–7, 8–15 days) to identify lead-time specific probability cutoffs.
+- Dynamic integration into the `config.THRESHOLDS` pipeline to maximize recall.
 
-### Phase 2: LSTM & Hybrid Integration
-- Integration of LSTM to capture temporal rainfall dependencies.
-- Hybrid probability calibration (XGBoost fitted on LSTM embeddings).
+### Phase 2: `is_forecast` Augmentation & Retraining
+- Modified the data pipeline to understand the difference between historical ground-truth and API-derived forecasts.
+- Injected augmented sequences during training to teach the model to handle "statistical noise" at longer horizons.
 
-### Phase 3: Forecast Ensembling
-- Transition from historical data to real-time ensembled weather forecasts (GFS/ICON).
-- Calibration of per-lead-time thresholds.
+### Phase 3: GFS/ICON Ensemble Integration
+- Replaced single-source weather fetching with a multi-model ensemble (GFS + ICON).
+- Implemented a conservative blending logic (max rainfall for short-term, average for long-term).
 
-### Phase 4: Operationalization
-- Automated daily `cron` job pipeline.
-- Three-tier alerting system and CSV export.
+### Phase 4: Operational Pipeline
+- Developed `run_daily_operational.py` for automated daily monitoring.
+- Integrated automated headless GEE data fallback for seamless context building.
 
 ### Phase 5: Continuous Improvement
-- Automated model drift detection.
-- Proactive retraining protocol based on new labeled data accumulation.
+- Established a monthly "Model Drift" detection protocol comparison against GEE ground-truth.
+- Automated retraining triggers defined by sustained degradation in precision or recall.
 
 ---
 
@@ -95,7 +98,7 @@ graph TD
 ### Prerequisites
 - Python 3.9+
 - Google Earth Engine Service Account and Key
-- Required packages: `pip install -r requirements.txt` (Coming soon)
+- Install dependencies: `pip install -r requirements.txt`
 
 ### Running Daily Operations
 ```bash
@@ -110,7 +113,10 @@ python evaluate_predictions.py --rolling-eval
 ---
 
 ## 📜 Acknowledgements
-Developed as a robust early warning solution for flood-prone regions, leveraging modern AI to protect local communities.
+- **Google Earth Engine** for satellite ground truth data
+- **Open-Meteo** for GFS/ICON ensemble weather forecasts  
+- **USDA** for soil texture classification data
+- **AMD** for hardware acceleration support (ROCm™/Instinct™)
 
 ---
 *Created by [ALPHA-117](https://github.com/ALPHA-117)*
