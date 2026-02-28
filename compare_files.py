@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 csv_path = r'D:\PROJECTS\Rain Predict\batch_template.csv'
-train_data_dir = r'D:\PROJECTS\Rain Predict\Train Data'
+train_data_dir = r'D:\PROJECTS\Rain Predict\Rain Data'
 
 df = pd.read_csv(csv_path)
 expected_files = set(df['output_name'].dropna().astype(str).tolist())

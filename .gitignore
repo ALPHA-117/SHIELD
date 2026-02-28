@@ -34,11 +34,11 @@ wheels/
 
 # Data Directories (Large CSVs)
 Data/
-Train Data/
 After Data/
 Predict Data*/
 Operational_Alerts/
 *.csv
+!Rain Data/*.csv
 *.zip
 
 # Credentials

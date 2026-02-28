@@ -4,7 +4,7 @@ from shield.predict import predict_flood, load_models
 from shield.config import FEATURES
 
 def debug_forecast():
-    csv_path = "Train Data/barmer_monsoon_2023.csv"
+    csv_path = "Rain Data/barmer_monsoon_2023.csv"
     models = load_models()
     
     print("Running debug forecast...")

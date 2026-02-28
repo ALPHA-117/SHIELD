@@ -201,7 +201,7 @@ A system administrator or automated cron job should monitor `Model_Drift.log` on
 
 ### C. The Retraining Protocol (How to act)
 When retraining is triggered, the following workflow must be executed:
-1. **Data Harvesting**: Run `gee_simple.py` with bounding boxes targeting the regions that suffered the most drift over the previous 6-12 months. Save this to `Train Data/`.
+1. **Data Harvesting**: Run `gee_simple.py` with bounding boxes targeting the regions that suffered the most drift over the previous 6-12 months. Save this to `Rain Data/`.
 2. **Model Retuning**: Execute `python shield/train.py`. The LSTM and XGBoost models will parse the new data. The `_augment_forecast_sequences` function will ensure the scaler properly weights `is_forecast` based on the new conditions.
 3. **Threshold Recalibration**: Run `python calibrate_thresholds.py`. The probability densities will have shifted with the new model weights. Update `config.THRESHOLDS` with the new recommended cutoffs.
 4. **Validation Check**: Run `python evaluate_predictions.py --rolling-eval` to confirm the metrics have risen back above the minimum safety thresholds before deploying the updated weights to the live production server.

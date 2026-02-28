@@ -1,4 +1,4 @@
-# SHIELD: Smart Hydro-climate Insights for Early warning & Local Defense
+# SHIELD: Scalable Hydrological Intelligence for Early flood-risk and Lead-time Detection
 
 ## 🌍 Brief about the Idea
 **SHIELD** is an advanced AI-powered flood prediction and early warning system designed to bridge the gap between global climate data and local disaster preparedness. By combining high-resolution satellite imagery, real-time weather forecasts, and physics-informed environmental features (soil/terrain), SHIELD provides actionable flood risk assessments up to **15 days in advance**. 

@@ -133,7 +133,7 @@ def main():
     parser.add_argument("--rolling-eval", action="store_true", help="Evaluate 1-day to 15-day rolling advance-warning lead time")
     args = parser.parse_args()
 
-    train_dir = "Train Data"
+    train_dir = "Rain Data"
     if args.rolling_eval:
         out_dir = "Predict Data Rolling"
     elif args.perfect_weather:

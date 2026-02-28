@@ -41,7 +41,7 @@ log = logging.getLogger("download")
 
 # ── Default paths ──────────────────────────────────────────────────────────────
 DEFAULT_INPUT  = "batch_template.csv"
-DEFAULT_OUT    = "Train Data"
+DEFAULT_OUT    = "Rain Data"
 POLL_INTERVAL  = 30   # seconds between GEE task status checks
 
 from shield.config import GEE_PROJECT
@@ -147,7 +147,7 @@ def _get_task_states(ee, target_names: set) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Poll GEE tasks and download completed CSVs to Train Data/"
+        description="Poll GEE tasks and download completed CSVs to Rain Data/"
     )
     parser.add_argument(
         "--input", default=DEFAULT_INPUT,

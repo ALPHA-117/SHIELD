@@ -56,11 +56,10 @@ def fetch_recent_gee_data(region_name: str, bbox: dict, days_back: int = 30) -> 
     end_date_str = date.today().isoformat()
     output_name = f"{region_name}_ops_{end_date_str}"
     
-    # Check if user placed a downloaded CSV in ALERTS_DIR or Train Data
-    local_csv_path = os.path.join(ALERTS_DIR, f"{output_name}.csv")
-    fallback_path = os.path.join(".", f"{output_name}.csv")
-    import glob
-    train_patterns = glob.glob(os.path.join("Train Data", f"{region_name.lower()}_*.csv"))
+    # Check if user placed a downloaded CSV in ALERTS_DIR or Rain Data
+    # Pattern: {region}_*.csv
+    alerts_patterns = glob.glob(os.path.join(ALERTS_DIR, f"{region_name.lower()}_*.csv"))
+    train_patterns = glob.glob(os.path.join("Rain Data", f"{region_name.lower()}_*.csv"))
     train_fallback = train_patterns[-1] if train_patterns else ""
     
     if os.path.exists(local_csv_path):
