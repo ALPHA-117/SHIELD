@@ -59,12 +59,12 @@ graph TB
 
     subgraph "SHIELD Core (AMD EPYC™ + Instinct™)"
         subgraph "A. Data Preprocessing"
-            DP1[Ingestion Engine]
-            DP2[Physics-Informed Feature Engineering]
+            B(Data Preprocessing)
+            DP2[Physics-Informed Features]
         end
 
         subgraph "B. Hybrid Model (ROCm™)"
-            D{Hybrid Controller}
+            D{Hybrid Model}
             E[LSTM Layer: Temporal]
             F[XGBoost Layer: Spatial]
         end
