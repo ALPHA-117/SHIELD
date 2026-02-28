@@ -1,0 +1,13 @@
+pandas
+numpy
+xgboost
+tensorflow
+scikit-learn
+google-earth-engine
+requests
+matplotlib
+joblib
+scipy
+earthengine-api
+python-dotenv
+tkinter

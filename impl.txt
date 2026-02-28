@@ -1,0 +1,57 @@
+Implementation Plan: Phase 0 and Phase 1
+Goal Description
+The user has provided a comprehensive roadmap. We will begin with Phase 0 and Phase 1. Phase 0 focuses on stabilizing the codebase and adding the is_forecast feature flag. Phase 1 focuses on calculating and determining optimal thresholds for different lead times to maximize Recall without destroying Precision.
+
+User Review Required
+None for now. We will execute Phase 0 and Phase 1 algorithms.
+
+Proposed Changes
+Phase 0: Immediate Cleanup
+0.1 Tags/Branching: The user noted git is not used. We will copy the current SHIELD architecture (with the tiered forecaster and optional Markov chain artifacts if any remain) to a shield_experiments folder or equivalent (e.g., shield_markov_exp), so the prior work is saved without polluting the main pipeline. We will ensure the main shield directory is clean.
+0.2 is_forecast flag: Update shield.features.create_features or the 
+predict.py
+ sequence builder to append an is_forecast flag (0 for historical rows, 1 for predicted rows generated during the recursive loop). Since this changes FEATURES and XGB_INPUT_SIZE, we must update config.py and ensure the training loop also understands this feature (so it can be trained in Phase 2).
+0.3 Document Ceiling: Append a formal note to 
+score.md
+ about the absolute ceiling.
+Phase 1: Threshold Calibration
+1.1 PR Curve Script: Create a script calibrate_thresholds.py that loads the rolling evaluation predictions (Predict Data Rolling/*.csv) and generates a Precision-Recall curve for different lead times to identify optimal thresholds programmatically.
+1.2 Window-Specific Logic: Update 
+shield/config.py
+ to define THRESHOLDS dictionary and update shield.predict to use THRESHOLDS.get(f"{day}_day", 0.50) instead of a hardcoded 0.50.
+1.3 Re-evaluate: Re-run the evaluation script 
+evaluate_predictions.py
+ with the new threshold logic.
+Phase 2: Retrain with Data Source Awareness
+2.1 Rebuild Sequences: Retroactively label every day in historical data. In 
+predict.py
+ (and potentially train.py synthetic data loops), when predicting future days, set is_forecast=1. For historical rows, is_forecast=0. Update shield.config.FEATURES to include this.
+2.2 Retrain LSTM: Execute the training pipeline to fit the LSTM on the new +1 feature.
+2.3 Retrain XGBoost: Fit XGBoost on the updated LSTM embeddings.
+2.4 Re-evaluate: Re-run evaluations to verify the 15-day fixed forecast sequence inconsistency problem (false positive explosion) is resolved.
+Phase 3: Upgrade the Weather Input
+3.1 Integrate IMD API: Research and integrate the IMD (India Meteorological Department) forecast API.
+3.2 Weather Input Ensemble: Create a WeatherInputEnsemble class in 
+shield/weather.py
+ that fetches from both APIs and blends them based on seasonal weights (IMD 0.65 in cyclone seasons, 0.40 otherwise).
+3.3 Rebuild Tiered Forecaster: Combine Phase 2 constraints (is_forecast=1 beyond Day 7) with Phase 3 ensembles.
+Days 1-3: IMD + Open-Meteo ensemble
+Days 4-7: Open-Meteo primary, Seasonal fallback
+Days 8-15: Seasonal fallback with is_forecast=1.
+3.4 API Failure Handling: Add try/except blocks to fallback gracefully across all weather calls.
+Phase 4: Operational Pipeline
+4.1 Cron Job: Create a script designed for daily execution pulling 7-day forecasts and 30-day recent GEE data.
+4.2 Three-Tier Alert System: Update the UI/export logic to categorize days into "🔴 High Confidence Warning", "🟡 Watch Advisory", "🔵 Outlook Only".
+4.3 Automated Feedback: Build an automated runner for 
+evaluate_predictions.py
+ against accumulating GEE ground truth.
+Phase 5: Continuous Model Improvement
+Establish conventions for storing and accumulating new labeled data for ongoing retraining.
+Verification Plan
+Phase 0: Check backup directory shield_markov_exp. Run a quick training cycle to ensure is_forecast doesn't break tensor shapes.
+Phase 1: The output of calibrate_thresholds.py will dictate the threshold values. 
+evaluate_predictions.py
+ will prove the metrics improved.
+Phase 2: Verify train.py executes successfully with the new feature dimension. Confirm 15-day evaluation false positives are reduced.
+Phase 3: Verify IMD fetched correctly alongside Open-Meteo. Prove tiered architecture is active.
+Phase 4: Construct test runs mimicking cron behavior.

@@ -1,0 +1,53 @@
+# Python/ML
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ML Models & Data
+*.h5
+*.pkl
+*.json
+# EXCEPT for these specific config/model files
+!scaler.pkl
+!xgb_model.json
+!flood_predictor_lstm.h5
+!flood_predictor_xgb.pkl
+!shield/shield-488115-ad3bb2e0adfc.json
+
+# Data Directories (Large CSVs)
+Data/
+Train Data/
+After Data/
+Predict Data*/
+Operational_Alerts/
+*.csv
+*.zip
+
+# Credentials
+shield/*.json
+!shield/__init__.py
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo

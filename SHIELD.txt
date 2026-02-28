@@ -1,0 +1,284 @@
+SHIELD(Smart Hydro-climate Insights for Early warning & Local Defense)
+Main Causes:
+1. Floods
+•	Heavy Rainfall: Intense or prolonged rain overwhelms drainage systems.
+•	Snowmelt: Rapid melting of snow increases river levels.
+•	Storm Surges: Coastal flooding due to hurricanes or cyclones.
+•	Dam/Levee Failures: Infrastructure collapse releases large water volumes.
+2. Droughts
+•	Low Precipitation: Extended periods of below-average rainfall.
+•	High Temperatures: Increased evaporation dries soil and reservoirs.
+•	Climate Change: Alters weather patterns, causing prolonged dry spells.
+3. Storms (Hurricanes, Cyclones, Tornadoes, Thunderstorms)
+•	Warm Ocean Waters (for hurricanes/cyclones): Fuels storm intensity.
+•	Atmospheric Instability: Creates thunderstorms and tornadoes.
+•	Wind Shear: Changes in wind speed/direction influence storm formation.
+•	Climate Change: Warmer oceans increase storm intensity and rainfall.
+•	Urban Heat Islands: Can intensify localized storms.
+Early Detection Methods:
+1. Flood Detection:
+•	Satellite Monitoring (NASA, ESA): Tracks rainfall and river levels.
+•	River Gauges & Sensors: Measure water levels in real time.
+•	Weather Radar: Predicts heavy rainfall and flash floods.
+•	AI & Machine Learning: Models flood risks based on historical data.
+2. Drought Detection:
+•	Satellite Imagery (NDVI, Soil Moisture Sensors): Monitors vegetation health.
+•	Rainfall & Groundwater Monitoring: Tracks long-term deficits.
+•	Drought Indices (Palmer, SPI): Quantifies drought severity.
+•	AI Predictions: Forecasts drought trends using climate models.
+3. Storm Detection:
+•	Doppler Radar: Tracks storm movement and intensity.
+•	Satellite Imagery (GOES, Himawari): Monitors cyclone formation.
+•	Weather Models (ECMWF, GFS): Predicts storm paths days in advance.
+•	Ocean Buoys & Aircraft Recon: Measures hurricane conditions in real time.
+•	Lightning Detection Networks: Warns of severe thunderstorms.
+
+
+
+18-05-25 0055 hrs
+Started with project
+Starting with Flood prediction
+Causes of Flood
+
+Heavy Rainfall: Intense or prolonged rain overwhelms drainage systems. 
+Snowmelt: Rapid melting of snow increases river levels. 
+Storm Surges: Coastal flooding due to hurricanes or cyclones. 
+Dam/Levee Failures: Infrastructure collapse releases large water volumes.
+
+Continuing with Heavy rainfall
+Lets start with heavy rainfall
+Heavy Rainfall Prediction
+✅ Problem:
+Excessive or continuous rain can overflow drainage systems or rivers.
+📊 Data Required:
+Real-time rainfall from IoT rain gauges
+Satellite precipitation data:
+NASA GPM (Global Precipitation Measurement)
+IMD APIs (Rainfall Forecasts)
+Terrain & drainage capacity maps (DEM models)
+🤖 Solution Approach:
+Train a Time Series model (e.g., LSTM) on rainfall + flood event data.
+Combine real-time IoT rainfall with forecast data to predict overflow risk.
+Use hydrological models (like HEC-HMS or SWMM) to simulate runoff.
+📦 Tools:
+Python, Pandas, TensorFlow
+APIs: NASA GPM, IMD OpenWeatherMap
+Hydrological simulation: HEC-HMS
+I first wanted to tackle the prediction of heavy rainfall 
+For that we need to get NASA GPM (Global Precipitation Measurement) 
+IMD APIs (Rainfall Forecasts) 
+Terrain & drainage capacity maps (DEM models) 
+Then we need to do Train a Time Series model (e.g., LSTM) on rainfall + flood event data. Combine real-time IoT rainfall with forecast data to predict overflow risk. Use hydrological models (like HEC-HMS or SWMM) to simulate runoff.
+
+Dividing zones in India
+State->Districts->Clusters->Zones
+If adequate data is not present for a zone then parent zone or cluster zone data is taken, nearest major zone whose data is available
+Applying greedy algorithm for more data for accuracy but also seeing minimization of data size
+Might go for cluster or city based data
+Might go for important for prone zones for analyzation
+
+Signing off at 0205 hrs 18-05-2025 
+
+Signing in at 1300 hrs 18-05-2025
+We need to find and train model first
+
+First we need to get a model for prediction and then train it right
+ We can use a location where there is frequent flood and then a location where there is no flood and then we can feed the data and then train it
+Best Models for Flood Prediction Based on Rainfall
+✅ 1. Gradient Boosted Trees (e.g., XGBoost / LightGBM)
+•	Pros:
+o	High accuracy for structured/tabular data
+o	Handles non-linearity well
+o	Built-in feature importance
+•	Cons: Requires labeled data (Flood / No Flood)
+•	Use when: You have rainfall and some environmental features per location/date.
+👉 Recommended as a baseline — extremely powerful and fast.
+________________________________________
+✅ 2. Random Forest
+•	Similar to XGBoost but simpler and less prone to overfitting with noisy data.
+•	Good for:
+o	Interpretability
+o	Faster experiments
+o	Balanced bias-variance
+👉 Use when data is noisy or limited but moderately labeled.
+________________________________________
+✅ 3. LSTM (Long Short-Term Memory Network)
+•	Pros:
+o	Ideal for time-series data like rainfall over days/months
+o	Captures temporal dependencies
+•	Cons:
+o	Needs lots of sequential (temporal) data
+o	Harder to train and tune
+👉 Use when you have rainfall data over time for each location.
+________________________________________
+✅ 4. CNN + LSTM (for spatial-temporal modeling)
+•	For using satellite image patches or gridded rainfall maps as input.
+•	More advanced setup — accurate but data-hungry.
+👉 Use when you want to analyze multiple locations together over time with spatial proximity.
+________________________________________
+✅ 5. Transformer-based models (e.g., Temporal Fusion Transformers)
+•	State-of-the-art for multivariate time-series forecasting
+•	Handles missing data, multiple time features, etc.
+👉 Very promising if you plan to scale later — but needs effort to set up.
+________________________________________
+✅ Recommended Path for You
+Phase	Model	Why
+Phase 1	XGBoost	High accuracy, easy to set up for tabular data
+Phase 2	LSTM	If you're modeling rainfall over time per zone
+Phase 3	CNN + LSTM or Transformer	For spatial-temporal precision later
+________________________________________
+🧪 Evaluation Metrics to Use
+•	Accuracy (for balanced classes)
+•	F1-score / Precision-Recall (for unbalanced data)
+•	ROC-AUC
+•	Confusion Matrix
+•	Brier Score (if using probabilistic predictions)
+
+Continuing with Phase 1
+Model: XGBoost for tabular data of flood prone zones
+
+Identifying a Flood Event in Barpeta
+Based on available reports, Barpeta experienced significant flooding starting around June 20, 2023. This event affected multiple revenue circles, including Barnagar, Barpeta, and Sarthebari, with Sarthebari being particularly impacted. Data India+1ReliefWeb+1India Today NE
+________________________________________
+⏳ Defining the Alert Window
+To predict floods 7 to 15 days in advance, we'll focus on the period leading up to the flood:
+•	Flood onset: June 20, 2023
+•	Data collection window: June 5 to June 19, 2023
+________________________________________
+📥 Data Collection Plan
+For each day from June 5 to June 19, 2023, we'll gather:
+•	Rainfall (mm): Daily precipitation data
+•	Elevation (m): Static elevation data for the area
+•	Latitude & Longitude: Coordinates of the specific zone
+•	Flood Label: 0 (no flood) for all days in this windowThe Times of India
+On June 20, 2023, the flood occurred, so this date will have a Flood Label of 1.
+________________________________________
+🗂️ Structuring the Dataset
+Your dataset will look like this:
+Date	Latitude	Longitude	Rainfall_mm	Elevation_m	Flood_Label
+2023-06-05	26.32	91.00	X	Y	0
+...	...	...	...	...	...
+2023-06-19	26.32	91.00	X	Y	0
+2023-06-20	26.32	91.00	X	Y	1
+Note: Replace X with actual rainfall data and Y with the elevation value for the location.
+________________________________________
+🛠️ Next Steps
+1.	Data Extraction:
+o	Use satellite data sources like GPM or CHIRPS for rainfall.
+o	Use SRTM or ASTER for elevation data.
+2.	Data Preprocessing:
+o	Clean and format the data into the structure shown above.
+3.	Model Training:
+o	Use this dataset to train your predictive model (e.g., XGBoost or Random Forest).
+4.	Evaluation:
+o	Test the model's ability to predict the flood event on June 20, 2023, based on the preceding data.
+SITREP: 1353 hrs collecting datas for Barapeta Assam (Rainfall and Elevation)| Waiting for export of data to G Drive
+Reconfigurating data
+
+Signing in 2130hrs 19-05-25
+Datas reconfigured 
+Proceeding with XGBoost
+Refering for threshold values for Parameters in the data
+Waiting for confirmation and then editing in code 
+Got it. I’ll research standard and empirically derived threshold values for flood occurrence based on rainfall intensity, elevation, and soil texture. These thresholds will help inform the feature engineering or decision logic in your XGBoost-based flood detection system.
+I’ll find credible sources, including environmental agency guidelines, scientific studies, and hydrological research. I’ll get back to you shortly with a comprehensive summary.
+Flood Thresholds: Rainfall, Elevation, and Soil Texture
+Rainfall Intensity and Flooding
+Figure: Conceptual storm rainfall vs. time. High bars are heavy rainfall output relative to water vapor input. Very intense rain over short periods drives flash floods. In practice, convective storms with rainfall rates ≳25 mm/h (≈1 in/h) are often considered significantly heavy. NOAA flash‐flood guidance for small basins shows 1 hour rainfall thresholds typically in the 13–29 mm range (≈½–1 in) to initiate flooding. The WMO notes that “heavy rain” corresponds to ≳4 mm/h and “heavy showers” ≳10 mm/h (i.e. ≥96–240 mm/day sustained). In short, short intense bursts (tens of mm in an hour) trigger flash floods, whereas sustained totals of order 50–100 mm in a day or more commonly lead to river flooding and inundation (exact values vary by region and storm climatology).
+•	Flash floods: Typically driven by intense convective rainfall. For example, 25 mm/h (1 in/h) is a rule-of-thumb “high” rate. Empirical flash‐flood guidance shows 1 h rainfall of ≈13–29 mm suffices to flood small basins.
+•	Heavy rainfall: WMO defines heavy rain >4 mm/h and heavy shower >10 mm/h. Even sustained 10–20 mm/h over several hours can cause flooding in vulnerable areas.
+•	Sustained totals: Multi-hour or multi-day totals exceeding tens of cm/day become dangerous. (E.g. many 100 year 24 h storms in the U.S. are on the order of 100–150 mm.) Although exact “one-size” thresholds vary, a 1 day total ≳50 mm is often considered extreme, and ≳100 mm is frequently flood-inducing in many climates.
+Elevation (Low-lying Terrain) and Flood Risk
+Flood risk is highest in low-lying, flat areas near water. For coastal regions, the WMO highlights the “low-elevation coastal zone” (LECZ) – defined as below about 10 m above sea level – as highly vulnerable to inundation. Inland, river floodplains and valley bottoms (which are by definition low relief) concentrate floodwaters. In flood susceptibility studies, areas with low elevation and gentle slopes consistently emerge as most hazardous. For example, one GIS study notes that very flood-prone zones are “characterized by low elevation, gentle slopes, and increased drainage density”. In practice, any area just a few meters above local river or sea level is at greatest risk; a common guideline is that places within the lowest 10–30 m of major basins or coasts are especially flood-prone.
+•	Coastal zones: “Low-elevation coastal zones” (<10 m MSL) are densely populated and highly exposed. Even a few meters of sea-level rise or storm surge can flood these areas.
+•	River floodplains: Flat river valleys close to the channel – essentially the local low point – see backwater flooding. While no universal altitude cutoff exists, floodplain mapping typically shows the lowest ~10–100 m of terrain beside rivers as mapped flood zones, with steeper/high ground excluded.
+•	Urban areas: Depressions or low spots in cities (often 0–5 m elevation relative to river/sea) flood first. In essence, any terrain that is “low-lying” relative to surrounding relief is at elevated risk.
+Soil Texture and Flood Vulnerability
+Figure: USDA soil texture classification triangle (sand, silt, clay percentages). Coarser (sandy) soils have large pore spaces and very high infiltration capacity, whereas fine (clayey) soils infiltrate very slowly. For example, USDA data show sandy soils infiltrate on the order of 20–30 mm/h or more, loamy soils about 5–10 mm/h, and clays only 1–5 mm/h. Low infiltration means rainfall becomes surface runoff, so clayey soils (hydrologic soil group D) – often defined as <0.06 in/h (~1.5 mm/h) in steady rate – are highly prone to flooding. In contrast, sandy or gravelly soils (HSG A/B) can absorb rain so fast (≫20 mm/h) that they rarely flood from rainfall alone. In practical terms, a catchment underlain by clay or compacted silts will generate flood flow with much lower rainfall input than a similar basin on permeable sand.
+•	Coarse textures (sand, gravel): Infiltration is very high. Steady infiltration rates often exceed 20–30 mm/h, so most rainfall percolates and surface runoff is minimal. These soils only flood under extreme rainfall or when fully saturated.
+•	Medium textures (loam, silt loam): Intermediate infiltration (a few to ~10 mm/h). These can flood if rainfall intensity exceeds their infiltration (e.g. heavy convective storms), or if antecedent moisture is high.
+•	Fine textures (clay, silty clay): Very low infiltration (~1–5 mm/h). Soils are classified as high-runoff (HSG D) with threshold steady rates ≲1.5 mm/h. Even moderate rain quickly produces runoff and flooding.
+In summary, typical flood-trigger thresholds include very intense rainfall rates (e.g. >25 mm/h) or large daily totals (50–100+ mm), on terrain that is relatively low in elevation, and on soils with poor infiltration (high clay content). These guidelines—drawn from hydrometeorological studies and official guidance—help define when and where flooding is likely.
+Sources: Official and peer-reviewed hydrology references and agencies (NOAA/NWS, WMO, USDA/NRCS, FAO) provide the above threshold values and concepts. These cover convective (flash) flood guidance, precipitation climatology, topographic analyses, and soil infiltration data.
+Citations
+
+ nssl.noaa.gov
+Flash Flood Forecasting: An Ingredients-Based Methodology
+moderately high rainfall rates begin at about 25 mm (Çone in.) h01 , and moderately long durations begin at about 1 h, but these should be considered only as the crudest of guidelines.
+
+ nssl.noaa.gov
+Flash Flood Forecasting: An Ingredients-Based Methodology
+/3q06 0229 Mp 562 Tuesday Nov 12 10:58 AM AMS: Forecasting (December 96) 0229 562 WEATHER AND FORECASTING VOLUME 11 FIG. 1. Schematic illustration of the time variation of water vapor input (cross-hatched area) and the precipitation output (vertical bars) over the lifetime of a precipitation system. The units are arbitrary, so the system being portrayed can be any precipitating process with a developing phase (time Å 0–3 units), a mature phase (time Å 3–6 units), and a dissipating phase (time Å 6–10 units). For this example,
+
+ weather.gov
+Flash Flood Guidance Improvement Team Report
+to 100 mi2, the range of 1-hr TRO values is from 13 mm to 29 mm (a range of about ½ inch). Uncertainty analysis shows that the 16% and 84% uncertainty bounds for values in this basin can span about a 1-inch range. Given that about 68% of current operational 1 hr TRO values in 10 RFCs across the country are between 0 in. and ½ in. and 21% of the values are between ½ in. and 1 in., the computed estimates of local variability and
+
+community.wmo.int
+Aviation | Hazards | Precipitation | World Meteorological Organization
+While there is no agreed international definition regarding rainfall intensity, some use the following criteria: Heavy rain is defined as rates in excess of 4 mm per hour while heavy showers are defined as rates in excess of 10 mm per hour. Showers are further classified as being violent if the rate exceeds 50 mm per hour, although these are normally considered to be rates typical for tropical regions.
+
+ nature.com
+Hidden vulnerability of US Atlantic coast to sea-level rise due to vertical land motion | Nature Communications
+Coastal zones—the low-elevation (<10 meters above sea level) zone at the land- water interface – provide essential habitat, ecosystem, and environmental functions. Landward, coastal areas host one-third of the world’s population, and 15 out of 20 present-day megacities are located within low-elevation coastal zones1. Toward the sea, most coastlines are sheltered by coastal wetland ecosystems, providing invaluable physical, chemical, biological, and socioeconomic benefits such as food production, water filtration, preservation of biodiversity, shoreline protection, storm buffering, sediment retention, nutrient cycling, and carbon
+
+ mdpi.com
+Flood Susceptibility Analysis with Integrated Geographic Information System and Analytical Hierarchy Process: A Multi-Criteria Framework for Risk Assessment and Mitigation
+zones are characterized by low elevation, gentle slopes, and increased drainage density, aligning with findings from multiple studies [20 , 150,48]. The northwestern and southwestern sections of Davidson County, featuring higher elevations, steeper slopes, greater distance from rivers, and forest cover, exhibit very low to low flood susceptibility. Meanwhile, the central portion of the county, with its moderate elevation, low slope, and developed land use, predominantly falls within the moderate flood susceptibility category.
+
+fao.org
+Annex 2 Infiltration rate and infiltration test
+Soil type
+
+ nrcs.usda.gov
+Soil Quality Physical Indicator Information Sheet Series
+Steady Infiltration Rate (in/hr) Sands > 0.8 Loams 0.2 - 0.4 Clays 0.04 - 0.2 Table 1. Steady infiltration rates for general soil texture groups in
+
+ stormwater.pca.state.mn.us
+Soils with low infiltration capacity - Minnesota Stormwater Manual
+Soils with low infiltration capacity (tight soils) are defined as soils with steady-state infiltration rates
+
+
+Completed XGBoost 1st Implementation
+Satisfied with results
+Will continue with different datasets and training 
+Refer to Flood_train_xgboost3.py in D:/PYTHON
+Will continue with LSTM further
+Signing off at 0140hrs 20-05-2025
+
+Continuing with Phase 2
+LSTM integration 
+Signing in 0015 hr 05-06-2025
+Signing off 0217hrs 05-06-2025
+
+Signing in 0110hrs 08-06-2025
+XGBoost+LSTM Complete 
+Integration successful 
+Giving positive results for the first instances 
+Going for the next instances and check
+Feeling lucky 
+0305-> Not lucky at all
+Still stuck at the integration model as had to add other soil types too
+Looking for algorithms and tunings for enhancing the hybrid model
+Enhancing data preparation, model architecture, xgboost training and post processing
+Signing off 0500hrs 08-06-2025
+
+Signing in 2130hrs 08-06-2025
+Integration finally completed with new requirements
+Getting good results
+Added river consideration
+Completed the training code
+Going for the implementation code now
+Wish me luck
+2357hrs 
+Luck is not with me at all
+
+
+
+
+
+
+
+
+
+
