@@ -47,21 +47,57 @@ graph TD
 ---
 
 ## 🏗️ System Architecture Diagram
-The technical stack and data flow between components, optimized for AMD hardware.
+Technical stack and data flow optimized for AMD hardware, merging high-level logic with system components.
 
 ```mermaid
-graph TD
-    A[Google Earth Engine] -->|GPM Rainfall & SRTM Elevation| B(Data Preprocessing)
-    C[Open-Meteo API] -->|GFS & ICON Forecasts| B
-    B --> D{Hybrid Model}
-    D -->|Time-Series Patterns| E[LSTM Layer]
-    D -->|Spatial Features| F[XGBoost Layer]
-    E --> G[Flood Probability]
+graph TB
+    subgraph "External Cloud Layers"
+        GEE[Google Earth Engine]
+        OM[Open-Meteo API]
+        USDA[USDA Soil Database]
+    end
+
+    subgraph "SHIELD Core (AMD EPYC™ + Instinct™)"
+        subgraph "A. Data Preprocessing"
+            DP1[Ingestion Engine]
+            DP2[Physics-Informed Feature Engineering]
+        end
+
+        subgraph "B. Hybrid Model (ROCm™)"
+            D{Hybrid Controller}
+            E[LSTM Layer: Temporal]
+            F[XGBoost Layer: Spatial]
+        end
+    end
+
+    subgraph "C. Monitoring & Feedback"
+        G[Flood Probability Engine]
+        H[Three-Tier Alert System]
+        I[Operational CSV Reports]
+        J[Feedback Loop vs GEE GT]
+    end
+
+    %% Flow Connections with detailed labels
+    GEE -->|GPM Rainfall & SRTM Elevation| B
+    OM -->|GFS & ICON Forecasts| B
+    USDA --> DP2
+    
+    B --> D
+    DP2 --> D
+    
+    D -->|Time-Series Patterns| E
+    D -->|Spatial Features| F
+    
+    E --> G
     F --> G
-    G --> H[Three-Tier Alert System]
-    H -->|🔴 🟡 🔵| I[Operational Reports]
-    I --> J[Feedback Loop vs GEE Ground Truth]
+    
+    G --> H
+    H -->|🔴 🟡 🔵| I
+    I --> J
     J -->|Retraining Trigger| D
+
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#fff,stroke:#333
 ```
 
 ---
