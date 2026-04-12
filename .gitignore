@@ -51,3 +51,7 @@ shield/*.json
 .idea/
 *.swp
 *.swo
+
+# Experiments
+shield_markov_exp/
+

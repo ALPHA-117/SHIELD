@@ -7,9 +7,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 def test_config():
     from shield.config import FEATURES, XGB_FEATURES, XGB_INPUT_SIZE, SOIL_PARAMS, get_risk_level
-    assert len(FEATURES) == 18,         f"FEATURES: expected 18, got {len(FEATURES)}"
-    assert len(XGB_FEATURES) == 12,     f"XGB_FEATURES: expected 12, got {len(XGB_FEATURES)}"
-    assert XGB_INPUT_SIZE == 13,        f"XGB_INPUT_SIZE: expected 13, got {XGB_INPUT_SIZE}"
+    assert len(FEATURES) == 19,         f"FEATURES: expected 19, got {len(FEATURES)}"
+    assert len(XGB_FEATURES) == 13,     f"XGB_FEATURES: expected 13, got {len(XGB_FEATURES)}"
+    assert XGB_INPUT_SIZE == 14,        f"XGB_INPUT_SIZE: expected 14, got {XGB_INPUT_SIZE}"
     assert len(SOIL_PARAMS) == 12,      f"SOIL_PARAMS: expected 12 soil types"
     lbl, clr = get_risk_level(0.6)
     assert "EXTREME" in lbl or "CATASTROPHIC" in lbl, f"Unexpected label for 0.6: {lbl}"
@@ -72,7 +72,7 @@ def test_feature_pipeline():
     missing_cols = [f for f in FEATURES if f not in out.columns]
     assert not missing_cols, f"Missing after feature engineering: {missing_cols}"
     assert len(out) > 0, "Feature engineering dropped ALL rows"
-    print(f"  [PASS] feature pipeline  input={n} rows, output={len(out)} rows, all 18 cols present")
+    print(f"  [PASS] feature pipeline  input={n} rows, output={len(out)} rows, all {len(FEATURES)} cols present")
 
 def test_label_pipeline():
     """Label generation on synthetic data."""
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     print(f"\n{'='*52}")
     if failed == 0:
-        print(f"All {len(tests)} tests PASSED. ✅")
+        print(f"All {len(tests)} tests PASSED.")
     else:
-        print(f"{failed}/{len(tests)} tests FAILED. ❌")
+        print(f"{failed}/{len(tests)} tests FAILED.")
     sys.exit(failed)

@@ -1,6 +1,6 @@
 # SHIELD: Scalable Hydrological Intelligence for Early flood-risk and Lead-time Detection
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Custom](https://img.shields.io/badge/License-Custom--Non--Commercial-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Machine Learning](https://img.shields.io/badge/ML-XGBoost%20%2B%20LSTM-orange.svg)]()
 [![Hack2Skill](https://img.shields.io/badge/Hackathon-Hack2Skill%20x%20AMD-red.svg)]()
@@ -110,9 +110,20 @@ python run_daily_operational.py
 python evaluate_predictions.py --rolling-eval
 ```
 
+## 📜 License & Attribution
+
+This project is licensed under a **Custom Non-Commercial Attribution License**. 
+
+### Terms:
+- **Non-Commercial**: Cannot be used for profits, business, or commercial ventures.
+- **Attribution**: Full credit must be given to **ALPHA-117** in any use case (hackathons, presentations, academic projects).
+- **No Product**: Software cannot be used as a standalone or integrated commercial product.
+
+See the [LICENSE](LICENSE) file for the full text.
+
 ---
 
-## 📜 Acknowledgements
+## 🛠️ Acknowledgements
 - **Google Earth Engine** for satellite ground truth data
 - **Open-Meteo** for GFS/ICON ensemble weather forecasts  
 - **USDA** for soil texture classification data
